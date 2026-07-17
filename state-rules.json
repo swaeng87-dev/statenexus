@@ -1,0 +1,23 @@
+{
+  "ca-tx": {
+    "suta_rate": "2.7% (New Employer Phase)",
+    "filing_time": "14 Business Days",
+    "nexus_trigger": "Having a permanent remote employee physically working within Texas borders triggers full payroll nexus.",
+    "registration_url": "https://texas.gov",
+    "affiliate_cta": "https://deel.com"
+  },
+  "ca-ny": {
+    "suta_rate": "4.1% (Standard New Employer Rate)",
+    "filing_time": "21 Business Days",
+    "nexus_trigger": "Employee working remotely inside New York State for more than 14 cumulative calendar days.",
+    "registration_url": "https://ny.gov",
+    "affiliate_cta": "https://deel.com"
+  },
+  "ny-fl": {
+    "suta_rate": "2.7% (Initial Reemployment Tax Rate)",
+    "filing_time": "10 Business Days",
+    "nexus_trigger": "Hiring a remote worker residing in Florida requires local employer account registration.",
+    "registration_url": "https://floridarevenue.com",
+    "affiliate_cta": "https://deel.com"
+  }
+}
