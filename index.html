@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>US Multi-State Payroll Nexus & Tax Calculator</title>
+    <script src="https://tailwindcss.com"></script>
+    <!-- Google Structured Data SEO Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "US State-by-State Payroll Nexus Calculator",
+      "operatingSystem": "All",
+      "applicationCategory": "BusinessApplication",
+      "browserRequirements": "Requires JavaScript. Requires HTML5.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0.00",
+        "priceCurrency": "USD"
+      },
+      "description": "Calculate state unemployment tax (SUTA) rates, filing compliance timelines, and payroll corporate tax nexus requirements when hiring remote employees in the USA."
+    }
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-900 antialiased font-sans">
+
+    <header class="max-w-4xl mx-auto pt-12 pb-6 px-4 text-center">
+        <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900">
+            US State-by-State <span class="text-blue-600">Payroll Nexus</span> Calculator
+        </h1>
+        <p class="mt-3 text-lg text-slate-600">
+            Calculate tax liabilities, SUTA rates, and filing paths when hiring remote US employees.
+        </p>
+    </header>
+
+    <main class="max-w-2xl mx-auto px-4">
+        <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-6 md:p-8">
+            <form id="nexusForm" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">Company HQ State</label>
+                        <select id="hqState" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="ca">California (CA)</option>
+                            <option value="ny">New York (NY)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">Employee Work State</label>
+                        <select id="employeeState" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="tx">Texas (TX)</option>
+                            <option value="ny">New York (NY)</option>
+                            <option value="fl">Florida (FL)</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 px-6 rounded-xl transition duration-150 ease-in-out shadow-lg">
+                    Calculate Tax Nexus Breakdown
+                </button>
+            </form>
+        </div>
+
+        <div id="resultsCard" class="hidden mt-8 bg-white rounded-2xl shadow-xl border border-slate-100 p-6 md:p-8 space-y-6">
+            <h2 class="text-xl font-bold text-slate-900 border-b pb-3">🚨 Compliance Requirements Found</h2>
+            
+            <div class="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                    <span class="block text-xs font-semibold text-slate-400 uppercase">Estimated SUTA Tax Rate</span>
+                    <span id="resSuta" class="text-base font-bold text-slate-800">-</span>
+                </div>
+                <div>
+                    <span class="block text-xs font-semibold text-slate-400 uppercase">Manual Filing Window</span>
+                    <span id="resTime" class="text-base font-bold text-slate-800">-</span>
+                </div>
+            </div>
+
+            <div>
+                <span class="block text-xs font-semibold text-slate-400 uppercase mb-1">What Triggers Nexus Here?</span>
+                <p id="resTrigger" class="text-sm text-slate-600 leading-relaxed">-</p>
+            </div>
+
+            <div class="bg-blue-50 rounded-xl p-5 border border-blue-100 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="space-y-1 text-center md:text-left">
+                    <h4 class="font-bold text-blue-900 text-base">Skip 6 Weeks of Government Paperwork</h4>
+                    <p class="text-xs text-blue-700">Automate your cross-state tax registration, compliance, and multi-state payroll instantly.</p>
+                </div>
+                <a id="affLink" href="#" target="_blank" rel="noopener sponsored" class="bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm py-3 px-5 rounded-xl whitespace-nowrap transition shadow-md">
+                    Automate via Deel ➔
+                </a>
+            </div>
+
+            <div class="text-center pt-2">
+                <a id="manualUrl" href="#" target="_blank" rel="noopener" class="text-xs text-slate-400 underline hover:text-slate-600">
+                    Or, review the local state registration rules manually.
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        async function loadStateData(hq, emp) {
+            const routeKey = `${hq.toLowerCase()}-${emp.toLowerCase()}`;
+            try {
+                const response = await fetch('./state-rules.json');
+                const data = await response.json();
+                const routeData = data[routeKey];
+
+                if(routeData) {
+                    document.getElementById('hqState').value = hq.toLowerCase();
+                    document.getElementById('employeeState').value = emp.toLowerCase();
+
+                    document.getElementById('resSuta').innerText = routeData.suta_rate;
+                    document.getElementById('resTime').innerText = routeData.filing_time;
+                    document.getElementById('resTrigger').innerText = routeData.nexus_trigger;
+                    document.getElementById('manualUrl').href = routeData.registration_url;
+                    document.getElementById('affLink').href = routeData.affiliate_cta;
+
+                    document.title = `${hq.toUpperCase()} to ${emp.toUpperCase()} Payroll Nexus & Tax Calculator`;
+                    document.getElementById('resultsCard').classList.remove('hidden');
+                } else {
+                    alert("Calculation data currently being updated for this pair. Try matching ca-tx, ca-ny, or ny-fl.");
+                }
+            } catch (err) {
+                console.error("Database tracking routing error:", err);
+            }
+        }
+
+        // GitHub Pages Engine: Read URL parameters on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const route = urlParams.get('route');
+
+            if (route) {
+                const states = route.split('-');
+                if (states.length === 2) {
+                    loadStateData(states[0], states[1]);
+                }
+            }
+        });
+
+        // Trigger on drop-down select submit action
+        document.getElementById('nexusForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const hq = document.getElementById('hqState').value;
+            const emp = document.getElementById('employeeState').value;
+            
+            // Push query state cleanly to browser address line
+            history.pushState(null, '', `?route=${hq}-${emp}`);
+            loadStateData(hq, emp);
+        });
+    </script>
+</body>
+</html>
