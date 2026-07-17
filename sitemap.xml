@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://sitemaps.org">
+  <!-- Core Main Page Entry -->
+  <url>
+    <loc>https://YOUR_GITHUB_USERNAME.github.io/YOUR_REPO_NAME/</loc>
+    <priority>1.0</priority>
+  </url>
+  <!-- California to Texas Route Parameter -->
+  <url>
+    <loc>https://YOUR_GITHUB_USERNAME.github.io/YOUR_REPO_NAME/?route=ca-tx</loc>
+    <priority>0.8</priority>
+  </url>
+  <!-- California to New York Route Parameter -->
+  <url>
+    <loc>https://YOUR_GITHUB_USERNAME.github.io/YOUR_REPO_NAME/?route=ca-ny</loc>
+    <priority>0.8</priority>
+  </url>
+  <!-- New York to Florida Route Parameter -->
+  <url>
+    <loc>https://YOUR_GITHUB_USERNAME.github.io/YOUR_REPO_NAME/?route=ny-fl</loc>
+    <priority>0.8</priority>
+  </url>
+</urlset>
