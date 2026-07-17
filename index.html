@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>US Multi-State Payroll Nexus & Tax Calculator</title>
-    <script src="https://tailwindcss.com"></script>
-    <!-- Google Structured Data SEO Schema -->
+    <!-- Tailwind CSS Engine -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -23,80 +23,105 @@
     }
     </script>
 </head>
-<body class="bg-slate-50 text-slate-900 antialiased font-sans">
+<body class="bg-gradient-to-br from-slate-50 via-slate-100 to-blue-50/30 text-slate-900 antialiased font-sans min-h-screen">
 
-    <header class="max-w-4xl mx-auto pt-12 pb-6 px-4 text-center">
-        <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900">
-            US State-by-State <span class="text-blue-600">Payroll Nexus</span> Calculator
+    <!-- Top Navigation Bar for Trust -->
+    <nav class="border-b border-slate-200/80 bg-white/80 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+            <span class="font-bold text-slate-900 tracking-tight text-lg">Nexus<span class="text-blue-600">Sync</span></span>
+            <span class="text-xs font-semibold px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full border border-slate-200">US Compliance Tool v1.0</span>
+        </div>
+    </nav>
+
+    <!-- Main Workspace Container -->
+    <header class="max-w-4xl mx-auto pt-16 pb-8 px-4 text-center">
+        <h1 class="text-4xl md:text-5xl font-black tracking-tight text-slate-900 leading-tight">
+            US State-by-State <br class="md:hidden"><span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Payroll Nexus</span> Calculator
         </h1>
-        <p class="mt-3 text-lg text-slate-600">
-            Calculate tax liabilities, SUTA rates, and filing paths when hiring remote US employees.
+        <p class="mt-4 text-base md:text-lg text-slate-600 max-w-xl mx-auto font-medium">
+            Instantly diagnose local state unemployment tax (SUTA) rates, corporate nexus triggers, and registration processing times.
         </p>
     </header>
 
-    <main class="max-w-2xl mx-auto px-4">
-        <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-6 md:p-8">
-            <form id="nexusForm" class="space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <main class="max-w-2xl mx-auto px-4 pb-24">
+        <!-- Input Selector Interface Box -->
+        <div class="bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-200/60 p-6 md:p-10 transition-all duration-300 hover:shadow-2xl hover:shadow-slate-200/60">
+            <form id="nexusForm" class="space-y-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-2">Company HQ State</label>
-                        <select id="hqState" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="ca">California (CA)</option>
-                            <option value="ny">New York (NY)</option>
-                        </select>
+                        <label class="block text-xs font-bold text-slate-500 tracking-wider uppercase mb-2.5">Company HQ State</label>
+                        <div class="relative">
+                            <select id="hqState" class="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl px-5 py-4 text-slate-800 font-semibold focus:outline-none focus:border-blue-500 focus:bg-white transition-all cursor-pointer">
+                                <option value="ca">California (CA)</option>
+                                <option value="ny">New York (NY)</option>
+                            </select>
+                        </div>
                     </div>
                     <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-2">Employee Work State</label>
-                        <select id="employeeState" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="tx">Texas (TX)</option>
-                            <option value="ny">New York (NY)</option>
-                            <option value="fl">Florida (FL)</option>
-                        </select>
+                        <label class="block text-xs font-bold text-slate-500 tracking-wider uppercase mb-2.5">Employee Work State</label>
+                        <div class="relative">
+                            <select id="employeeState" class="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl px-5 py-4 text-slate-800 font-semibold focus:outline-none focus:border-blue-500 focus:bg-white transition-all cursor-pointer">
+                                <option value="tx">Texas (TX)</option>
+                                <option value="ny">New York (NY)</option>
+                                <option value="fl">Florida (FL)</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
-                <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 px-6 rounded-xl transition duration-150 ease-in-out shadow-lg">
-                    Calculate Tax Nexus Breakdown
+                
+                <button type="submit" class="w-full bg-gradient-to-r from-slate-900 to-slate-800 hover:from-blue-600 hover:to-indigo-600 text-white text-lg font-bold py-4 px-6 rounded-2xl transition-all duration-300 transform active:scale-[0.99] shadow-lg shadow-slate-900/10 hover:shadow-blue-600/20">
+                    Calculate Custom Tax Nexus Breakdown
                 </button>
             </form>
         </div>
 
-        <div id="resultsCard" class="hidden mt-8 bg-white rounded-2xl shadow-xl border border-slate-100 p-6 md:p-8 space-y-6">
-            <h2 class="text-xl font-bold text-slate-900 border-b pb-3">🚨 Compliance Requirements Found</h2>
+        <!-- Output Metric Panel Display Block (Hidden until submit trigger) -->
+        <div id="resultsCard" class="hidden mt-8 bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-200/60 p-6 md:p-10 space-y-8 animate-fade-in">
+            <div class="flex items-center gap-3 border-b border-slate-100 pb-5">
+                <span class="flex h-3 w-3 relative">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                </span>
+                <h2 class="text-lg font-bold tracking-tight text-slate-900">Compliance Architecture Found</h2>
+            </div>
             
-            <div class="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                    <span class="block text-xs font-semibold text-slate-400 uppercase">Estimated SUTA Tax Rate</span>
-                    <span id="resSuta" class="text-base font-bold text-slate-800">-</span>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div class="bg-slate-50 border border-slate-100 rounded-2xl p-4">
+                    <span class="block text-xs font-bold text-slate-400 tracking-wider uppercase mb-1">Estimated SUTA Tax Rate</span>
+                    <span id="resSuta" class="text-lg font-extrabold text-slate-900">-</span>
                 </div>
-                <div>
-                    <span class="block text-xs font-semibold text-slate-400 uppercase">Manual Filing Window</span>
-                    <span id="resTime" class="text-base font-bold text-slate-800">-</span>
+                <div class="bg-slate-50 border border-slate-100 rounded-2xl p-4">
+                    <span class="block text-xs font-bold text-slate-400 tracking-wider uppercase mb-1">Manual Filing Window</span>
+                    <span id="resTime" class="text-lg font-extrabold text-slate-900">-</span>
                 </div>
             </div>
 
-            <div>
-                <span class="block text-xs font-semibold text-slate-400 uppercase mb-1">What Triggers Nexus Here?</span>
-                <p id="resTrigger" class="text-sm text-slate-600 leading-relaxed">-</p>
+            <div class="bg-slate-50 border border-slate-100 rounded-2xl p-5">
+                <span class="block text-xs font-bold text-slate-400 tracking-wider uppercase mb-2">What Triggers Nexus Here?</span>
+                <p id="resTrigger" class="text-sm font-medium text-slate-600 leading-relaxed">-</p>
             </div>
 
-            <div class="bg-blue-50 rounded-xl p-5 border border-blue-100 flex flex-col md:flex-row items-center justify-between gap-4">
-                <div class="space-y-1 text-center md:text-left">
-                    <h4 class="font-bold text-blue-900 text-base">Skip 6 Weeks of Government Paperwork</h4>
-                    <p class="text-xs text-blue-700">Automate your cross-state tax registration, compliance, and multi-state payroll instantly.</p>
+            <!-- Prime Conversion Visual Anchor Box -->
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-6 text-white flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl shadow-blue-600/20">
+                <div class="space-y-1.5 text-center md:text-left">
+                    <h4 class="font-extrabold text-lg tracking-tight">Skip 6 Weeks of State Paperwork</h4>
+                    <p class="text-sm text-blue-100/90 font-medium">Automate cross-state tax registration, payroll tax setup, and continuous HR compliance instantly.</p>
                 </div>
-                <a id="affLink" href="#" target="_blank" rel="noopener sponsored" class="bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm py-3 px-5 rounded-xl whitespace-nowrap transition shadow-md">
+                <a id="affLink" href="#" target="_blank" rel="noopener sponsored" class="w-full md:w-auto text-center bg-white hover:bg-slate-50 text-blue-600 font-extrabold text-sm py-4 px-6 rounded-xl transition duration-150 whitespace-nowrap shadow-md active:scale-95">
                     Automate via Deel ➔
                 </a>
             </div>
 
+            <!-- Secondary Manual Alternative Link -->
             <div class="text-center pt-2">
-                <a id="manualUrl" href="#" target="_blank" rel="noopener" class="text-xs text-slate-400 underline hover:text-slate-600">
-                    Or, review the local state registration rules manually.
+                <a id="manualUrl" href="#" target="_blank" rel="noopener" class="text-xs font-semibold text-slate-400 underline hover:text-blue-600 transition-colors">
+                    Or, review raw local state manual forms directly.
                 </a>
             </div>
         </div>
     </main>
 
+    <!-- Operational Code Engine Logic -->
     <script>
         async function loadStateData(hq, emp) {
             const routeKey = `${hq.toLowerCase()}-${emp.toLowerCase()}`;
@@ -125,7 +150,6 @@
             }
         }
 
-        // GitHub Pages Engine: Read URL parameters on page load
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const route = urlParams.get('route');
@@ -138,13 +162,10 @@
             }
         });
 
-        // Trigger on drop-down select submit action
         document.getElementById('nexusForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const hq = document.getElementById('hqState').value;
             const emp = document.getElementById('employeeState').value;
-            
-            // Push query state cleanly to browser address line
             history.pushState(null, '', `?route=${hq}-${emp}`);
             loadStateData(hq, emp);
         });
