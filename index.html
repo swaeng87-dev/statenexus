@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>US Multi-State Payroll Nexus & Tax Calculator</title>
     <!-- Tailwind CSS Engine -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://tailwindcss.com"></script>
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -36,7 +36,7 @@
     <!-- Main Workspace Container -->
     <header class="max-w-4xl mx-auto pt-16 pb-8 px-4 text-center">
         <h1 class="text-4xl md:text-5xl font-black tracking-tight text-slate-900 leading-tight">
-            US State-by-State <br class="md:hidden"><span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Payroll Nexus</span> Calculator
+            US State-by-State <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Payroll Nexus</span> Calculator
         </h1>
         <p class="mt-4 text-base md:text-lg text-slate-600 max-w-xl mx-auto font-medium">
             Instantly diagnose local state unemployment tax (SUTA) rates, corporate nexus triggers, and registration processing times.
@@ -49,20 +49,16 @@
             <form id="nexusForm" class="space-y-8">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 tracking-wider uppercase mb-2.5">Company HQ State</label>
-                        <div class="relative">
-                            <select id="hqState" class="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl px-5 py-4 text-slate-800 font-semibold focus:outline-none focus:border-blue-500">
-                                <!-- 50 States will inject here automatically -->
-                            </select>
-                        </div>
+                        <label class="block text-xs font-bold text-slate-500 tracking-wider uppercase mb-2">Company HQ State</label>
+                        <select id="hqState" class="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl px-5 py-4 text-slate-800 font-semibold focus:outline-none focus:border-blue-500">
+                            <!-- 50 States inject here automatically -->
+                        </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 tracking-wider uppercase mb-2.5">Employee Work State</label>
-                        <div class="relative">
-                            <select id="employeeState" class="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl px-5 py-4 text-slate-800 font-semibold focus:outline-none focus:border-blue-500">
-                                <!-- 50 States will inject here automatically -->
-                            </select>
-                        </div>
+                        <label class="block text-xs font-bold text-slate-500 tracking-wider uppercase mb-2">Employee Work State</label>
+                        <select id="employeeState" class="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl px-5 py-4 text-slate-800 font-semibold focus:outline-none focus:border-blue-500">
+                            <!-- 50 States inject here automatically -->
+                        </select>
                     </div>
                 </div>
                 
@@ -72,8 +68,8 @@
             </form>
         </div>
 
-        <!-- Output Metric Panel Display Block (Hidden until submit trigger) -->
-        <div id="resultsCard" class="hidden mt-8 bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-200/60 p-6 md:p-10 space-y-8 animate-fade-in">
+        <!-- Output Metric Panel Display Block -->
+        <div id="resultsCard" class="hidden mt-8 bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-200/60 p-6 md:p-10 space-y-8">
             <div class="flex items-center gap-3 border-b border-slate-100 pb-5">
                 <span class="flex h-3 w-3 relative">
                   <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
@@ -121,7 +117,8 @@
     <!-- Operational Code Engine Logic -->
     <script>
         async function loadStateData(hq, emp) {
-            const routeKey = `${hq.toLowerCase()}-${emp.toLowerCase()}`;
+            // Read data properties based entirely on the target Employee Work State
+            const routeKey = emp.toLowerCase();
             try {
                 const response = await fetch('./state-rules.json');
                 const data = await response.json();
@@ -140,62 +137,62 @@
                     document.title = `${hq.toUpperCase()} to ${emp.toUpperCase()} Payroll Nexus & Tax Calculator`;
                     document.getElementById('resultsCard').classList.remove('hidden');
                 } else {
-                    alert("Calculation data currently being updated for this pair. Try matching ca-tx, ca-ny, or ny-fl.");
+                    alert("Calculation data currently being updated for this state.");
                 }
             } catch (err) {
                 console.error("Database tracking routing error:", err);
             }
         }
 
-window.addEventListener('DOMContentLoaded', () => {
-    // Complete 50-state key map array
-    const stateList = {
-        "al":"Alabama (AL)","ak":"Alaska (AK)","az":"Arizona (AZ)","ar":"Arkansas (AR)","ca":"California (CA)",
-        "co":"Colorado (CO)","ct":"Connecticut (CT)","de":"Delaware (DE)","fl":"Florida (FL)","ga":"Georgia (GA)",
-        "hi":"Hawaii (HI)","id":"Idaho (ID)","il":"Illinois (IL)","in":"Indiana (IN)","ia":"Iowa (IA)",
-        "ks":"Kansas (KS)","ky":"Kentucky (KY)","la":"Louisiana (LA)","me":"Maine (ME)","md":"Maryland (MD)",
-        "ma":"Massachusetts (MA)","mi":"Michigan (MI)","mn":"Minnesota (MN)","ms":"Mississippi (MS)","mo":"Missouri (MO)",
-        "mt":"Montana (MT)","ne":"Nebraska (NE)","nv":"Nevada (NV)","nh":"New Hampshire (NH)","nj":"New Jersey (NJ)",
-        "nm":"New Mexico (NM)","ny":"New York (NY)","nc":"North Carolina (NC)","nd":"North Dakota (ND)","oh":"Ohio (OH)",
-        "ok":"Oklahoma (OK)","or":"Oregon (OR)","pa":"Pennsylvania (PA)","ri":"Rhode Island (RI)","sc":"South Carolina (SC)",
-        "sd":"South Dakota (SD)","tn":"Tennessee (TN)","tx":"Texas (TX)","ut":"Utah (UT)","vt":"Vermont (VT)",
-        "va":"Virginia (VA)","wa":"Washington (WA)","wv":"West Virginia (WV)","wi":"Wisconsin (WI)","wy":"Wyoming (WY)"
-    };
+        window.addEventListener('DOMContentLoaded', () => {
+            const stateList = {
+                "al":"Alabama (AL)","ak":"Alaska (AK)","az":"Arizona (AZ)","ar":"Arkansas (AR)","ca":"California (CA)",
+                "co":"Colorado (CO)","ct":"Connecticut (CT)","de":"Delaware (DE)","fl":"Florida (FL)","ga":"Georgia (GA)",
+                "hi":"Hawaii (HI)","id":"Idaho (ID)","il":"Illinois (IL)","in":"Indiana (IN)","ia":"Iowa (IA)",
+                "ks":"Kansas (KS)","ky":"Kentucky (KY)","la":"Louisiana (LA)","me":"Maine (ME)","md":"Maryland (MD)",
+                "ma":"Massachusetts (MA)","mi":"Michigan (MI)","mn":"Minnesota (MN)","ms":"Mississippi (MS)","mo":"Missouri (MO)",
+                "mt":"Montana (MT)","ne":"Nebraska (NE)","nv":"Nevada (NV)","nh":"New Hampshire (NH)","nj":"New Jersey (NJ)",
+                "nm":"New Mexico (NM)","ny":"New York (NY)","nc":"North Carolina (NC)","nd":"North Dakota (ND)","oh":"Ohio (OH)",
+                "ok":"Oklahoma (OK)","or":"Oregon (OR)","pa":"Pennsylvania (PA)","ri":"Rhode Island (RI)","sc":"South Carolina (SC)",
+                "sd":"South Dakota (SD)","tn":"Tennessee (TN)","tx":"Texas (TX)","ut":"Utah (UT)","vt":"Vermont (VT)",
+                "va":"Virginia (VA)","wa":"Washington (WA)","wv":"West Virginia (WV)","wi":"Wisconsin (WI)","wy":"Wyoming (WY)"
+            };
 
-    const hqDropdown = document.getElementById('hqState');
-    const empDropdown = document.getElementById('employeeState');
+            const hqDropdown = document.getElementById('hqState');
+            const empDropdown = document.getElementById('employeeState');
 
-    // Build the dropdown HTML structure programmatically
-    let optionsHtml = "";
-    for (const [code, name] of Object.entries(stateList)) {
-        optionsHtml += `<option value="${code}">${name}</option>`;
-    }
+            let optionsHtml = "";
+            for (const [code, name] of Object.entries(stateList)) {
+                optionsHtml += `<option value="${code}">${name}</option>`;
+            }
 
-    // Inject options into the user interface elements
-    hqDropdown.innerHTML = optionsHtml;
-    empDropdown.innerHTML = optionsHtml;
+            hqDropdown.innerHTML = optionsHtml;
+            empDropdown.innerHTML = optionsHtml;
 
-    // Set smart tool defaults (HQ: CA, Employee: TX) to guide user behavior
-    hqDropdown.value = "ca";
-    empDropdown.value = "tx";
+            // Set standard target defaults
+            hqDropdown.value = "ca";
+            empDropdown.value = "tx";
 
-    // Read inbound organic traffic URL parameters if they exist
-    const p = new URLSearchParams(window.location.search);
-    const r = p.get('route');
-    if (r) {
-        const s = r.split('-');
-        if (s.length === 2) loadStateData(s[0], s[1]);
-    }
-});
+            // FIXED: Accurately mapping index locations from string splits
+            const p = new URLSearchParams(window.location.search);
+            const r = p.get('route');
+            if (r) {
+                const s = r.split('-');
+                if (s.length === 2) {
+                    loadStateData(s[0], s[1]);
+                }
+            }
+        });
 
-
+        // Submit action click triggers execution engine
         document.getElementById('nexusForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const hq = document.getElementById('hqState').value;
             const emp = document.getElementById('employeeState').value;
+            
             history.pushState(null, '', `?route=${hq}-${emp}`);
             loadStateData(hq, emp);
         });
     </script>
-</body>
+  </body>
 </html>
