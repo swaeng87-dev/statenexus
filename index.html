@@ -49,19 +49,25 @@
             <form id="nexusForm" class="space-y-8">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 tracking-wider uppercase mb-2.5">Company HQ State</label>
+                        <label for="hqState" class="block text-xs font-bold text-slate-500 tracking-wider uppercase mb-2.5">Company HQ State</label>
                         <div class="relative">
-    <select id="hqState" class="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl px-5 py-4 text-slate-800 font-semibold focus:outline-none focus:border-blue-500">
-        <!-- 50 States will inject here automatically -->
-    </select>
+                            <select id="hqState" class="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl px-5 py-4 text-slate-800 font-semibold focus:outline-none focus:border-blue-500 appearance-none cursor-pointer">
+                                <!-- 50 States will inject here automatically -->
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
+                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                            </div>
                         </div>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 tracking-wider uppercase mb-2.5">Employee Work State</label>
+                        <label for="employeeState" class="block text-xs font-bold text-slate-500 tracking-wider uppercase mb-2.5">Employee Work State</label>
                         <div class="relative">
-    <select id="employeeState" class="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl px-5 py-4 text-slate-800 font-semibold focus:outline-none focus:border-blue-500">
-        <!-- 50 States will inject here automatically -->
-    </select>
+                            <select id="employeeState" class="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl px-5 py-4 text-slate-800 font-semibold focus:outline-none focus:border-blue-500 appearance-none cursor-pointer">
+                                <!-- 50 States will inject here automatically -->
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
+                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -120,11 +126,48 @@
 
     <!-- Operational Code Engine Logic -->
     <script>
+        // Sample data for demonstration (replace with actual state-rules.json)
+        const sampleData = {
+            "ca-tx": {
+                suta_rate: "New employer rate varies (CA: 3.4%, TX: 2.7%)",
+                filing_time: "2-4 weeks",
+                nexus_trigger: "Physical presence or economic nexus threshold met. Employee working in TX creates taxable presence.",
+                registration_url: "https://www.taxpayeraccess.texas.gov/",
+                affiliate_cta: "https://www.deel.com/"
+            },
+            "ca-ny": {
+                suta_rate: "New employer rate varies (CA: 3.4%, NY: 3.225%)",
+                filing_time: "3-6 weeks",
+                nexus_trigger: "NY has strict nexus laws. Any employee working remotely in NY triggers registration requirements.",
+                registration_url: "https://www.tax.ny.gov/",
+                affiliate_cta: "https://www.deel.com/"
+            },
+            "ny-fl": {
+                suta_rate: "New employer rate varies (NY: 3.225%, FL: 2.7%)",
+                filing_time: "2-3 weeks",
+                nexus_trigger: "Florida has no state income tax but requires unemployment insurance registration for remote workers.",
+                registration_url: "https://reemploymenttaxhelp.floridarevenue.com/",
+                affiliate_cta: "https://www.deel.com/"
+            }
+        };
+
         async function loadStateData(hq, emp) {
             const routeKey = `${hq.toLowerCase()}-${emp.toLowerCase()}`;
+            
             try {
-                const response = await fetch('./state-rules.json');
-                const data = await response.json();
+                let data;
+                
+                // Try to fetch external JSON first
+                try {
+                    const response = await fetch('./state-rules.json');
+                    if (!response.ok) throw new Error('JSON not found');
+                    data = await response.json();
+                } catch (fetchError) {
+                    // Fallback to sample data for demonstration
+                    console.log('Using sample data (state-rules.json not found)');
+                    data = sampleData;
+                }
+                
                 const routeData = data[routeKey];
 
                 if(routeData) {
@@ -138,63 +181,76 @@
                     document.getElementById('affLink').href = routeData.affiliate_cta;
 
                     document.title = `${hq.toUpperCase()} to ${emp.toUpperCase()} Payroll Nexus & Tax Calculator`;
-                    document.getElementById('resultsCard').classList.remove('hidden');
+                    
+                    // Show results with smooth scroll
+                    const resultsCard = document.getElementById('resultsCard');
+                    resultsCard.classList.remove('hidden');
+                    resultsCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 } else {
-                    alert("Calculation data currently being updated for this pair. Try matching ca-tx, ca-ny, or ny-fl.");
+                    alert(`Calculation data currently being updated for ${hq.toUpperCase()} to ${emp.toUpperCase()}. Try matching ca-tx, ca-ny, or ny-fl.`);
                 }
             } catch (err) {
                 console.error("Database tracking routing error:", err);
+                alert("An error occurred while calculating. Please try again.");
             }
         }
 
-window.addEventListener('DOMContentLoaded', () => {
-    // Complete 50-state key map array
-    const stateList = {
-        "al":"Alabama (AL)","ak":"Alaska (AK)","az":"Arizona (AZ)","ar":"Arkansas (AR)","ca":"California (CA)",
-        "co":"Colorado (CO)","ct":"Connecticut (CT)","de":"Delaware (DE)","fl":"Florida (FL)","ga":"Georgia (GA)",
-        "hi":"Hawaii (HI)","id":"Idaho (ID)","il":"Illinois (IL)","in":"Indiana (IN)","ia":"Iowa (IA)",
-        "ks":"Kansas (KS)","ky":"Kentucky (KY)","la":"Louisiana (LA)","me":"Maine (ME)","md":"Maryland (MD)",
-        "ma":"Massachusetts (MA)","mi":"Michigan (MI)","mn":"Minnesota (MN)","ms":"Mississippi (MS)","mo":"Missouri (MO)",
-        "mt":"Montana (MT)","ne":"Nebraska (NE)","nv":"Nevada (NV)","nh":"New Hampshire (NH)","nj":"New Jersey (NJ)",
-        "nm":"New Mexico (NM)","ny":"New York (NY)","nc":"North Carolina (NC)","nd":"North Dakota (ND)","oh":"Ohio (OH)",
-        "ok":"Oklahoma (OK)","or":"Oregon (OR)","pa":"Pennsylvania (PA)","ri":"Rhode Island (RI)","sc":"South Carolina (SC)",
-        "sd":"South Dakota (SD)","tn":"Tennessee (TN)","tx":"Texas (TX)","ut":"Utah (UT)","vt":"Vermont (VT)",
-        "va":"Virginia (VA)","wa":"Washington (WA)","wv":"West Virginia (WV)","wi":"Wisconsin (WI)","wy":"Wyoming (WY)"
-    };
+        window.addEventListener('DOMContentLoaded', () => {
+            // Complete 50-state key map array
+            const stateList = {
+                "al":"Alabama (AL)","ak":"Alaska (AK)","az":"Arizona (AZ)","ar":"Arkansas (AR)","ca":"California (CA)",
+                "co":"Colorado (CO)","ct":"Connecticut (CT)","de":"Delaware (DE)","fl":"Florida (FL)","ga":"Georgia (GA)",
+                "hi":"Hawaii (HI)","id":"Idaho (ID)","il":"Illinois (IL)","in":"Indiana (IN)","ia":"Iowa (IA)",
+                "ks":"Kansas (KS)","ky":"Kentucky (KY)","la":"Louisiana (LA)","me":"Maine (ME)","md":"Maryland (MD)",
+                "ma":"Massachusetts (MA)","mi":"Michigan (MI)","mn":"Minnesota (MN)","ms":"Mississippi (MS)","mo":"Missouri (MO)",
+                "mt":"Montana (MT)","ne":"Nebraska (NE)","nv":"Nevada (NV)","nh":"New Hampshire (NH)","nj":"New Jersey (NJ)",
+                "nm":"New Mexico (NM)","ny":"New York (NY)","nc":"North Carolina (NC)","nd":"North Dakota (ND)","oh":"Ohio (OH)",
+                "ok":"Oklahoma (OK)","or":"Oregon (OR)","pa":"Pennsylvania (PA)","ri":"Rhode Island (RI)","sc":"South Carolina (SC)",
+                "sd":"South Dakota (SD)","tn":"Tennessee (TN)","tx":"Texas (TX)","ut":"Utah (UT)","vt":"Vermont (VT)",
+                "va":"Virginia (VA)","wa":"Washington (WA)","wv":"West Virginia (WV)","wi":"Wisconsin (WI)","wy":"Wyoming (WY)"
+            };
 
-    const hqDropdown = document.getElementById('hqState');
-    const empDropdown = document.getElementById('employeeState');
+            const hqDropdown = document.getElementById('hqState');
+            const empDropdown = document.getElementById('employeeState');
 
-    // Build the dropdown HTML structure programmatically
-    let optionsHtml = "";
-    for (const [code, name] of Object.entries(stateList)) {
-        optionsHtml += `<option value="${code}">${name}</option>`;
-    }
+            // Build the dropdown HTML structure programmatically
+            let optionsHtml = "";
+            for (const [code, name] of Object.entries(stateList)) {
+                optionsHtml += `<option value="${code}">${name}</option>`;
+            }
 
-    // Inject options into the user interface elements
-    hqDropdown.innerHTML = optionsHtml;
-    empDropdown.innerHTML = optionsHtml;
+            // Inject options into the user interface elements
+            hqDropdown.innerHTML = optionsHtml;
+            empDropdown.innerHTML = optionsHtml;
 
-    // Set smart tool defaults (HQ: CA, Employee: TX) to guide user behavior
-    hqDropdown.value = "ca";
-    empDropdown.value = "tx";
+            // Set smart tool defaults (HQ: CA, Employee: TX) to guide user behavior
+            hqDropdown.value = "ca";
+            empDropdown.value = "tx";
 
-    // Read inbound organic traffic URL parameters if they exist
-    const p = new URLSearchParams(window.location.search);
-    const r = p.get('route');
-    if (r) {
-        const s = r.split('-');
-        if (s.length === 2) loadStateData(s[0], s[1]);
-    }
-});
+            // Read inbound organic traffic URL parameters if they exist
+            const p = new URLSearchParams(window.location.search);
+            const r = p.get('route');
+            if (r) {
+                const s = r.split('-');
+                if (s.length === 2 && stateList[s[0]] && stateList[s[1]]) {
+                    loadStateData(s[0], s[1]);
+                }
+            }
 
-
-        document.getElementById('nexusForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const hq = document.getElementById('hqState').value;
-            const emp = document.getElementById('employeeState').value;
-            history.pushState(null, '', `?route=${hq}-${emp}`);
-            loadStateData(hq, emp);
+            // Form submit handler - now properly inside DOMContentLoaded
+            document.getElementById('nexusForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const hq = document.getElementById('hqState').value;
+                const emp = document.getElementById('employeeState').value;
+                
+                if (hq === emp) {
+                    alert("HQ State and Employee State cannot be the same. Please select different states.");
+                    return;
+                }
+                
+                history.pushState(null, '', `?route=${hq}-${emp}`);
+                loadStateData(hq, emp);
+            });
         });
     </script>
 </body>
