@@ -147,17 +147,47 @@
             }
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const route = urlParams.get('route');
+window.addEventListener('DOMContentLoaded', () => {
+    // Complete 50-state key map array
+    const stateList = {
+        "al":"Alabama (AL)","ak":"Alaska (AK)","az":"Arizona (AZ)","ar":"Arkansas (AR)","ca":"California (CA)",
+        "co":"Colorado (CO)","ct":"Connecticut (CT)","de":"Delaware (DE)","fl":"Florida (FL)","ga":"Georgia (GA)",
+        "hi":"Hawaii (HI)","id":"Idaho (ID)","il":"Illinois (IL)","in":"Indiana (IN)","ia":"Iowa (IA)",
+        "ks":"Kansas (KS)","ky":"Kentucky (KY)","la":"Louisiana (LA)","me":"Maine (ME)","md":"Maryland (MD)",
+        "ma":"Massachusetts (MA)","mi":"Michigan (MI)","mn":"Minnesota (MN)","ms":"Mississippi (MS)","mo":"Missouri (MO)",
+        "mt":"Montana (MT)","ne":"Nebraska (NE)","nv":"Nevada (NV)","nh":"New Hampshire (NH)","nj":"New Jersey (NJ)",
+        "nm":"New Mexico (NM)","ny":"New York (NY)","nc":"North Carolina (NC)","nd":"North Dakota (ND)","oh":"Ohio (OH)",
+        "ok":"Oklahoma (OK)","or":"Oregon (OR)","pa":"Pennsylvania (PA)","ri":"Rhode Island (RI)","sc":"South Carolina (SC)",
+        "sd":"South Dakota (SD)","tn":"Tennessee (TN)","tx":"Texas (TX)","ut":"Utah (UT)","vt":"Vermont (VT)",
+        "va":"Virginia (VA)","wa":"Washington (WA)","wv":"West Virginia (WV)","wi":"Wisconsin (WI)","wy":"Wyoming (WY)"
+    };
 
-            if (route) {
-                const states = route.split('-');
-                if (states.length === 2) {
-                    loadStateData(states[0], states[1]);
-                }
-            }
-        });
+    const hqDropdown = document.getElementById('hqState');
+    const empDropdown = document.getElementById('employeeState');
+
+    // Build the dropdown HTML structure programmatically
+    let optionsHtml = "";
+    for (const [code, name] of Object.entries(stateList)) {
+        optionsHtml += `<option value="${code}">${name}</option>`;
+    }
+
+    // Inject options into the user interface elements
+    hqDropdown.innerHTML = optionsHtml;
+    empDropdown.innerHTML = optionsHtml;
+
+    // Set smart tool defaults (HQ: CA, Employee: TX) to guide user behavior
+    hqDropdown.value = "ca";
+    empDropdown.value = "tx";
+
+    // Read inbound organic traffic URL parameters if they exist
+    const p = new URLSearchParams(window.location.search);
+    const r = p.get('route');
+    if (r) {
+        const s = r.split('-');
+        if (s.length === 2) loadStateData(s[0], s[1]);
+    }
+});
+
 
         document.getElementById('nexusForm').addEventListener('submit', function(e) {
             e.preventDefault();
