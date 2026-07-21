@@ -1,23 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://sitemaps.org">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
   <!-- Core Main Page Entry -->
   <url>
-    <loc>https://YOUR_GITHUB_USERNAME.github.io/YOUR_REPO_NAME/</loc>
+    <loc>https://swaeng87-dev.github.io/statenexus/</loc>
+    <lastmod>2026-07-21</lastmod>
     <priority>1.0</priority>
+    <changefreq>weekly</changefreq>
   </url>
+
   <!-- California to Texas Route Parameter -->
   <url>
-    <loc>https://YOUR_GITHUB_USERNAME.github.io/YOUR_REPO_NAME/?route=ca-tx</loc>
+    <loc>https://swaeng87-dev.github.io/statenexus/?route=ca-tx</loc>
+    <lastmod>2026-07-21</lastmod>
     <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
   </url>
+
   <!-- California to New York Route Parameter -->
   <url>
-    <loc>https://YOUR_GITHUB_USERNAME.github.io/YOUR_REPO_NAME/?route=ca-ny</loc>
+    <loc>https://swaeng87-dev.github.io/statenexus/?route=ca-ny</loc>
+    <lastmod>2026-07-21</lastmod>
     <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
   </url>
+
   <!-- New York to Florida Route Parameter -->
   <url>
-    <loc>https://YOUR_GITHUB_USERNAME.github.io/YOUR_REPO_NAME/?route=ny-fl</loc>
+    <loc>https://swaeng87-dev.github.io/statenexus/?route=ny-fl</loc>
+    <lastmod>2026-07-21</lastmod>
     <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
   </url>
+
 </urlset>
